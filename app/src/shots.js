@@ -45,7 +45,7 @@ export async function runShot(shot, query, api) {
   }));
   const photos = loaded.filter(Boolean).map((entry) => entry.image);
 
-  if (shot === 'cover') document.body.classList.add('shot-cover');
+  if (shot === 'cover') document.body.classList.add('cover-capture');
   const width = read(query, 'w');
   const height = read(query, 'h');
   if (width != null && height != null && typeof api.setCanvas === 'function') {
