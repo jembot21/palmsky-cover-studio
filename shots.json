@@ -1,5 +1,26 @@
 [
-  { "name": "1-cover.jpg", "query": "?shot=cover&photo=pier&caption=Sunset%20Heist", "w": 1080, "h": 1080 },
-  { "name": "2-editor.jpg", "query": "?shot=editor&photo=boulevard&caption=Boulevard%20Queen", "w": 1280, "h": 720 },
-  { "name": "3-cover.jpg", "query": "?shot=cover&photo=boulevard&caption=Boulevard%20Queen", "w": 1080, "h": 1080 }
+  {
+    "name": "1-cover.jpg",
+    "query": "?shot=cover&w=1920&h=1080&layout=nine&grade=sunset&photos=boulevard,pier&caption=PALMSKY%20HEAT&sub=Neon%20Harbor%20Nights&heat=5&badge=LAUNCH%20WEEK",
+    "w": 1280,
+    "h": 720
+  },
+  {
+    "name": "2-editor.jpg",
+    "query": "?shot=editor&layout=hero-six&grade=neon&photos=pier,boulevard&caption=NIGHT%20SHIFT&sub=Downtown%20After%20Dark&heat=3",
+    "w": 1280,
+    "h": 720
+  },
+  {
+    "name": "3-cover.jpg",
+    "query": "?shot=cover&w=1080&h=1350&layout=hero-three&grade=sunset&photos=boulevard,pier&caption=PIER%20PRESSURE&sub=One%20Last%20Score&heat=4&badge=NEW",
+    "w": 1024,
+    "h": 1280
+  },
+  {
+    "name": "4-cover.jpg",
+    "query": "?shot=cover&w=1080&h=1080&layout=snapshots&grade=golden&photos=pier,boulevard&caption=GOLDEN%20HOUR&sub=Palm%20Sky%20Stories&heat=2",
+    "w": 1080,
+    "h": 1080
+  }
 ]

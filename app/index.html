@@ -1,23 +1,75 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cover Snap</title>
-<link rel="stylesheet" href="./style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0c1b">
+  <title>PalmSky Cover Studio</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Cover Snap</h1>
-    <p>A photo and a caption, made into a square cover.</p>
-    <label>Photo <input id="photo" type="file" accept="image/*"></label>
-    <label>Caption <input id="caption" type="text" maxlength="40" value="Sunset Heist"></label>
-    <button id="export" type="button">Export PNG 1080 x 1080</button>
-    <p id="status" role="status"></p>
-  </section>
-  <canvas id="cover" width="1080" height="1080" aria-label="The cover"></canvas>
-</main>
-<script type="module" src="./src/main.js"></script>
+  <header class="header" aria-label="PalmSky Cover Studio">
+    <div><span class="brand-mark" aria-hidden="true">PS</span><h1>PalmSky Cover Studio</h1></div>
+    <p>Your photos. Your cover. No upload — everything stays on your machine.</p>
+  </header>
+  <main class="app">
+    <aside class="controls" aria-label="Cover editor">
+      <div class="control-heading"><span>THE CREATIVE DESK</span><span class="live-dot">LOCAL / LIVE</span></div>
+      <fieldset>
+        <legend><span>01</span> Photos</legend>
+        <div class="uploads">
+          <label for="photo1">Photo 1<input id="photo1" type="file" accept="image/*" data-slot="0"></label>
+          <label for="photo2">Photo 2<input id="photo2" type="file" accept="image/*" data-slot="1"></label>
+          <label for="photo3">Photo 3<input id="photo3" type="file" accept="image/*" data-slot="2"></label>
+        </div>
+        <label for="slot">Load sample into<select id="slot"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select></label>
+        <div class="sample-chips" aria-label="Sample photos">
+          <button type="button" data-sample="boulevard">↗ Boulevard</button>
+          <button type="button" data-sample="pier">↗ Pier</button>
+        </div>
+        <p class="hint" id="panelHint">Tip: click a panel on the cover, then drag it to reposition and use Zoom.</p>
+      </fieldset>
+      <fieldset>
+        <legend><span>02</span> Art direction</legend>
+        <div class="two-col">
+          <label for="layout">Layout<select id="layout"><!-- Filled from LAYOUTS. --></select></label>
+          <label for="grade">Grade<select id="grade"><!-- Filled from GRADES. --></select></label>
+        </div>
+        <label class="check" for="ink"><input id="ink" type="checkbox">Ink bands (posterize)</label>
+        <label for="caption">Caption<input id="caption" type="text" maxlength="26" spellcheck="false"></label>
+        <label for="subtitle">Subtitle<input id="subtitle" type="text" maxlength="40"></label>
+        <div class="two-col">
+          <label for="heat">Heat<select id="heat"><option value="0">0 stars</option><option value="1">1 star</option><option value="2">2 stars</option><option value="3">3 stars</option><option value="4">4 stars</option><option value="5">5 stars</option></select></label>
+          <label for="badge">Badge<input id="badge" type="text" maxlength="18"></label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend><span>03</span> Panel tools</legend>
+        <p class="panel-readout">Selected panel <span id="panelInfo" aria-live="polite">1 / 9</span></p>
+        <label for="zoom">Zoom<input id="zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
+        <button id="swapPhoto" type="button">Use next photo in this panel</button>
+        <button id="resetPanel" class="quiet" type="button">Reset panel</button>
+      </fieldset>
+      <fieldset>
+        <legend><span>04</span> Make it yours</legend>
+        <label for="aspect">Preview aspect<select id="aspect"><option value="1080x1080">Square · 1:1</option><option value="1080x1350" selected>Portrait · 4:5</option><option value="1920x1080">Wide · 16:9</option><option value="1080x1920">Story · 9:16</option></select></label>
+        <div class="exports">
+          <button class="exportBtn" type="button" data-w="1080" data-h="1080">Square 1080×1080</button>
+          <button class="exportBtn" type="button" data-w="1080" data-h="1350">Portrait 1080×1350</button>
+          <button class="exportBtn" type="button" data-w="1920" data-h="1080">Wide 1920×1080</button>
+          <button class="exportBtn" type="button" data-w="1080" data-h="1920">Story 1080×1920</button>
+        </div>
+        <div class="two-col history"><button id="undo" type="button" disabled>↶ Undo</button><button id="redo" type="button" disabled>↷ Redo</button></div>
+        <p id="status" role="status">Getting the studio ready…</p>
+      </fieldset>
+    </aside>
+    <section class="stage" aria-label="Cover preview">
+      <div class="stage-label"><span>YOUR NEXT COVER</span><span id="previewSize">1080 × 1350 / PORTRAIT</span></div>
+      <div class="canvas-wrap"><canvas id="cover" width="720" height="900" aria-label="Cover preview. Select a panel and drag to reposition its photo." aria-describedby="panelHint">Your browser needs canvas support to preview and export a cover.</canvas></div>
+      <p class="stage-footer">A LITTLE SUNSET. A LOT OF MAIN CHARACTER ENERGY.</p>
+    </section>
+  </main>
+  <footer class="stage-footer">Runs 100% offline — your photos never leave this machine.</footer>
+  <script type="module" src="./src/main.js"></script>
 </body>
 </html>
