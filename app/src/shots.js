@@ -1,9 +1,12 @@
-export async function prepareShot(studio){
-  const request=new URLSearchParams(location.search);
-  if(request.has('photo'))await studio.demo(request.get('photo')==='boulevard'?'boulevard':'pier');
-  if(request.has('caption')){studio.model.caption=request.get('caption');document.getElementById('caption').value=studio.model.caption;studio.refresh()}
-  if(request.get('shot')==='cover'){
-    studio.model.size=[1080,1080];studio.refresh();const source=await studio.exportCover(false);const result=new Image();result.id='shotResult';result.alt='Exported PalmSky cover';result.src=source;await result.decode();document.body.classList.add('cover-shot');document.body.append(result);
+export async function configureShot(studio) {
+  const query=new URLSearchParams(location.search);
+  if(!query.has('shot'))return;
+  await studio.sample(query.get('photo')==='pier'?'pier':'boulevard');
+  const caption=query.get('caption');
+  if(caption){studio.design.title=caption.trim().toUpperCase().split(/\s+/).join('\n');document.querySelector('#title').value=studio.design.title;studio.setCaption(caption.toUpperCase()+' / PALMSKY ORIGINALS');}
+  studio.setSize('1080x1080');
+  if(query.get('shot')==='cover'){
+    const exported=await studio.makePng(false,false);
+    const image=new Image();image.id='shot-image';image.alt='A full-resolution cover exported by PalmSky';image.src=exported.url;await image.decode();document.body.append(image);document.body.classList.add('art-only');
   }
-  window.__PALMSKY_READY__=true;
 }

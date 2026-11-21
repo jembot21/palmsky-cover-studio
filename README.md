@@ -4,12 +4,62 @@
 ![rank](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/rank.svg)
 ![reward](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/reward.svg)
 
-A private, offline poster workshop for sunlit mischief and neon nights. Turn local photographs into an original crime-cinema cover with angular panels, ink-heavy titles, print texture, and palm silhouettes. Created for the [make.fun cover art challenge](https://make.fun/c/gta6-cover-art-01).
+A little sunset, a little trouble. PalmSky turns ordinary photographs into
+original crime-poster covers: sliced photo panels, oversized inked lettering,
+sunburst printwork and a skyline of silhouetted palms. Start with a bundled
+portrait or bring your own camera roll, then take home an actual PNG.
 
-Run `node serve.ts` with Node 22 and open http://localhost:8080. Alternatively serve the static `app/` directory with any local HTTP server. No installation, build step, external service, or account is required. Run `node main.ts` to package the app and screenshots into a dossier; set `MAKEFUN_OUTPUT_DIR` to choose its destination.
+Built for the [make.fun cover-art challenge](https://make.fun/c/gta6-cover-art-01)
+and its [cover studio bounty](https://make.fun/bounty/gta6-cover-art-01).
 
-Choose a bundled demo or add several photos. Select one of the numbered panels and assign a photo, drag it to position, and adjust zoom. Change the headline, script accent, and edition. Three panel arrangements and sunset, neon, or monochrome treatments update the canvas immediately. Keyboard arrows also move the crop when the preview has focus.
+## Open the studio
 
-Export real PNG artwork at **1080 × 1080**, **1080 × 1350**, or **1920 × 1080**. The last export can be opened at full size and downloaded again. Photographs remain in the browser; all fonts and sample assets are bundled. The query-driven screenshot mode follows the repository's `shots.json` cover/editor requests and displays a real PNG export for cover shots.
+Use Node 22 or newer. There is no installation, dependency download or bundler.
 
-Application code is MIT licensed; see LICENSE. Anton, Bebas Neue, and Pacifico are distributed under SIL OFL 1.1, included beside the fonts. The two starter sample photographs were generated for make.fun and are free to use. Lettering, layout, and decorative artwork are original to this app; it includes no official game artwork, logos, or proprietary game fonts.
+```sh
+node serve.ts --port 8765
+```
+
+Open http://localhost:8765 in a modern browser. The default server port is 8080
+if you omit the argument. All runtime assets live in `app/`; once served locally,
+the studio needs no internet connection. User photographs stay inside the browser.
+
+## From photo to poster
+
+1. Choose Boulevard or Pier, or use **Add your photos** to pick several images.
+2. Select one of four panels and click a library thumbnail to assign its photo.
+   A single imported photo fills every panel; multiple photos fill consecutive panels.
+3. Drag a panel in the live canvas to reframe. Zoom exposes tighter crops; reset
+   returns that panel to its centered framing. The focused canvas also accepts
+   arrow keys, and the panel selector provides a keyboard route to every panel.
+4. Write a two-line title, top caption and small script accent. Try Vice split,
+   Triptych or Crossfire, with Sunset, Neon or Mono print treatments.
+5. Pick a format and press **Export PNG**. The export downloads immediately and
+   opens an artwork proof with a second Save button.
+
+Every format is rendered anew at its native size: **1080 × 1080** square,
+**1080 × 1350** portrait, and **1920 × 1080** landscape. Exported artwork has
+no editor controls, panel selection marks or watermark. The print treatment
+combines tonal quantization, color mapping, fine halftone, seeded grain and vignette.
+
+## Package and check
+
+```sh
+MAKEFUN_OUTPUT_DIR=/tmp/out-r5 node main.ts
+```
+
+The entry point copies the app and three screenshots, then uses the unchanged
+kit dossier builder to produce `dossier.json`. A console inventory reports the
+packaged filenames and byte total without adding anything to the output folder.
+The screenshot routes in `shots.json` are handled by `src/shots.js`: `?shot=cover`
+displays a real app-generated PNG; `?shot=editor` keeps the working editor visible.
+Both routes accept the supplied `photo` and `caption` parameters.
+
+## Credits and licenses
+
+The application is MIT licensed; see `LICENSE`. The bundled Anton, Bebas Neue
+and Pacifico typefaces are under the SIL Open Font License 1.1, reproduced in
+`app/fonts/OFL-Anton.txt`, `OFL-BebasNeue.txt` and `OFL-Pacifico.txt`.
+The two starter photographs were generated for make.fun and supplied for free use.
+PalmSky's composition, lettering treatment and drawn ornaments are original.
+This project contains no Rockstar mark, official GTA illustration or official GTA font.

@@ -15,9 +15,27 @@ import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-app.ts';
+import { readdirSync as listPackage, statSync as packageStat } from 'node:fs';
+
+function announcePalmSkyInventory(base: string) {
+  const entries: { name: string; bytes: number }[] = [];
+  function descend(relative: string) {
+    for (const leaf of listPackage(join(base, relative), { withFileTypes: true })) {
+      const name = `${relative}/${leaf.name}`;
+      if (leaf.isDirectory()) descend(name);
+      else if (leaf.isFile()) entries.push({ name, bytes: packageStat(join(base, name)).size });
+    }
+  }
+  descend('app');
+  if (existsSync(join(base, 'screenshots'))) descend('screenshots');
+  console.log('PalmSky shipment · artwork tools and proofs');
+  entries.sort((a, b) => a.name.localeCompare(b.name)).forEach(item => console.log(`  ${item.name} · ${item.bytes} bytes`));
+  console.log(`PalmSky inventory: ${entries.length} files, ${entries.reduce((sum, item) => sum + item.bytes, 0)} bytes.`);
+}
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
+announcePalmSkyInventory(here);
 
 mkdirSync(out, { recursive: true });
 cpSync(join(here, 'app'), join(out, 'app'), { recursive: true });
