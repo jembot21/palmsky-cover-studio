@@ -2,7 +2,7 @@
 
 ![make.fun](https://make.fun/badge/gta6-cover-art-01.svg)
 ![rank](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/rank.svg)
-![reward](https://make.fun/badge/gta6-cover-art-01/reward.svg)
+![reward](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/reward.svg)
 
 A private, offline poster workshop for sunlit mischief and neon nights. Turn local photographs into an original crime-cinema cover with angular panels, ink-heavy titles, print texture, and palm silhouettes. Created for the [make.fun cover art challenge](https://make.fun/c/gta6-cover-art-01).
 
