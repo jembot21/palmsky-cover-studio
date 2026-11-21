@@ -1,75 +1,10 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0d0c1b">
-  <title>PalmSky Cover Studio</title>
-  <link rel="stylesheet" href="./style.css">
-</head>
-<body>
-  <header class="masthead" aria-label="PalmSky Cover Studio">
-    <div><span class="brand-tile" aria-hidden="true">PS</span><h1>PalmSky Cover Studio</h1></div>
-    <p>Your photos. Your cover. No upload — everything stays on your machine.</p>
-  </header>
-  <main class="studio-shell">
-    <aside class="panel-controls" aria-label="Cover editor">
-      <div class="group-heading"><span>THE CREATIVE DESK</span><span class="live-pip">LOCAL / LIVE</span></div>
-      <fieldset>
-        <legend><span>01</span> Photos</legend>
-        <div class="upload-strip">
-          <label for="photoInput1">Photo 1<input id="photoInput1" type="file" accept="image/*" data-slot="0"></label>
-          <label for="photoInput2">Photo 2<input id="photoInput2" type="file" accept="image/*" data-slot="1"></label>
-          <label for="photoInput3">Photo 3<input id="photoInput3" type="file" accept="image/*" data-slot="2"></label>
-        </div>
-        <label for="slotSelect">Load sample into<select id="slotSelect"><option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option></select></label>
-        <div class="sample-strip" aria-label="Sample photos">
-          <button type="button" data-sample="boulevard">↗ Boulevard</button>
-          <button type="button" data-sample="pier">↗ Pier</button>
-        </div>
-        <p class="helper-text" id="panelTip">Tip: click a panel on the cover, then drag it to reposition and use Zoom.</p>
-      </fieldset>
-      <fieldset>
-        <legend><span>02</span> Art direction</legend>
-        <div class="twin-grid">
-          <label for="layoutSelect">Layout<select id="layoutSelect"><!-- Filled from LAYOUTS. --></select></label>
-          <label for="gradeSelect">Grade<select id="gradeSelect"><!-- Filled from GRADES. --></select></label>
-        </div>
-        <label class="check-line" for="inkToggle"><input id="inkToggle" type="checkbox">Ink bands (posterize)</label>
-        <label for="captionInput">Caption<input id="captionInput" type="text" maxlength="26" spellcheck="false"></label>
-        <label for="subtitleInput">Subtitle<input id="subtitleInput" type="text" maxlength="40"></label>
-        <div class="twin-grid">
-          <label for="heatInput">Heat<select id="heatInput"><option value="0">0 stars</option><option value="1">1 star</option><option value="2">2 stars</option><option value="3">3 stars</option><option value="4">4 stars</option><option value="5">5 stars</option></select></label>
-          <label for="badgeInput">Badge<input id="badgeInput" type="text" maxlength="18"></label>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend><span>03</span> Panel tools</legend>
-        <p class="panel-meter">Selected panel <span id="panelDetails" aria-live="polite">1 / 9</span></p>
-        <label for="zoomSlider">Zoom<input id="zoomSlider" type="range" min="1" max="3" step="0.01" value="1"></label>
-        <button id="swapButton" type="button">Use next photo in this panel</button>
-        <button id="panelResetButton" class="muted-text" type="button">Reset panel</button>
-      </fieldset>
-      <fieldset>
-        <legend><span>04</span> Make it yours</legend>
-        <label for="ratioSelect">Preview aspect<select id="ratioSelect"><option value="1080x1080">Square · 1:1</option><option value="1080x1350" selected>Portrait · 4:5</option><option value="1920x1080">Wide · 16:9</option><option value="1080x1920">Story · 9:16</option></select></label>
-        <div class="export-bar">
-          <button class="export-action" type="button" data-w="1080" data-h="1080">Square 1080×1080</button>
-          <button class="export-action" type="button" data-w="1080" data-h="1350">Portrait 1080×1350</button>
-          <button class="export-action" type="button" data-w="1920" data-h="1080">Wide 1920×1080</button>
-          <button class="export-action" type="button" data-w="1080" data-h="1920">Story 1080×1920</button>
-        </div>
-        <div class="twin-grid history-actions"><button id="undoButton" type="button" disabled>↶ Undo</button><button id="redoButton" type="button" disabled>↷ Redo</button></div>
-        <p id="statusNote" role="status">Getting the studio ready…</p>
-      </fieldset>
-    </aside>
-    <section class="stage-block" aria-label="Cover preview">
-      <div class="stage-tag"><span>YOUR NEXT COVER</span><span id="previewNote">1080 × 1350 / PORTRAIT</span></div>
-      <div class="canvas-holder"><canvas id="coverCanvas" width="720" height="900" aria-label="Cover preview. Select a panel and drag to reposition its photo." aria-describedby="panelTip">Your browser needs canvas support to preview and export a cover.</canvas></div>
-      <p class="stage-baseline">A LITTLE SUNSET. A LOT OF MAIN CHARACTER ENERGY.</p>
-    </section>
-  </main>
-  <footer class="stage-baseline">Runs 100% offline — your photos never leave this machine.</footer>
-  <script type="module" src="./src/main.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PalmSky — Cover Studio</title><link rel="stylesheet" href="./style.css"></head>
+<body><header><a class="brand" href="./">PALMSKY<span> / COVER STUDIO</span></a><div class="local">● OFFLINE BY DESIGN <span>YOUR PHOTOS STAY HERE</span></div></header>
+<main><aside><div class="eyebrow">THE CITY IS YOURS</div><h1>Make your<br>next cover story.</h1><p class="intro">Your photos. After-hours energy.</p>
+<section><h2><b>01</b> THE CAST</h2><label class="upload">+ ADD YOUR PHOTOS<input id="files" type="file" accept="image/*" multiple></label><div class="demos"><button data-demo="pier">SUNSET PIER ↗</button><button data-demo="boulevard">BOULEVARD ↗</button></div><div id="library"></div><p class="hint">Select a panel below, then choose its photo.</p><div id="panels" class="segmented"></div><label>Panel photo<select id="assignment"></select></label><label class="range-label">Zoom <output id="zoomValue">1.0×</output><input id="zoom" type="range" min="1" max="3" step="0.01" value="1"></label><p class="hint">Drag the cover to reframe. Arrow keys nudge.</p></section>
+<section><h2><b>02</b> THE HEADLINE</h2><label>Cover title<input id="caption" value="SUNSET HEIST" maxlength="42"></label><div class="twocol"><label>Script accent<input id="subtitle" value="A little trouble in paradise" maxlength="45"></label><label>Edition<input id="edition" value="VOL. 06" maxlength="16"></label></div></section>
+<section><h2><b>03</b> THE ATMOSPHERE</h2><label>Panel arrangement<select id="layout"><option value="coast">Coastline / 4 panels</option><option value="split">Crossfire / 3 panels</option><option value="five">Nightshift / 5 panels</option></select></label><div class="segmented grades"><button data-grade="sunset" class="active">SUNSET</button><button data-grade="neon">NEON</button><button data-grade="mono">MONO</button></div></section></aside>
+<article><div class="previewbar"><span><i></i> LIVE COVER</span><span id="dimensions">1080 × 1350 PX</span></div><div id="stage"><canvas id="cover" tabindex="0" aria-label="Cover preview. Drag to position selected panel photo; arrow keys to nudge."></canvas></div><div class="under"><span>ORIGINAL ART. MAIN CHARACTER ENERGY.</span><span>↔ DRAG TO REFRAME</span></div></article>
+<aside class="export"><div class="eyebrow">READY FOR THE SPOTLIGHT</div><h2>Take it<br>to the streets.</h2><p>Full-resolution artwork.<br>No watermark. No account.</p><label>Canvas format<select id="format"><option value="1080x1350">Portrait · 1080 × 1350</option><option value="1080x1080">Square · 1080 × 1080</option><option value="1920x1080">Wide · 1920 × 1080</option></select></label><button id="download">EXPORT PNG <span>↗</span></button><p id="status" role="status">Your next iconic cover is one click away.</p><div class="ticket"><span>PALMSKY ORIGINALS</span><strong>AFTER HOURS<br>BEFORE LEGENDS.</strong><small>EST. 2026 / CREATE SOMETHING LOUD</small></div><button id="viewExport" disabled>VIEW LAST EXPORT ↗</button></aside></main>
+<footer><span>NO RULES. JUST GOOD COVERS.</span><span>BUILT FOR THE GOLDEN HOUR ↗</span></footer><dialog id="exportDialog"><button id="closeExport">CLOSE ×</button><img id="exportImage" alt="Exported PalmSky cover"><a id="saveAgain">DOWNLOAD PNG ↗</a></dialog><script type="module" src="./src/main.js"></script></body></html>

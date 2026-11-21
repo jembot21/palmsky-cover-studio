@@ -1,54 +1,15 @@
 # PalmSky Cover Studio
 
-[![make.fun · gta6-cover-art-01](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
-[![rank](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/rank.svg)](https://make.fun/bounty/gta6-cover-art-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
-[![reward](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/reward.svg)](https://make.fun/bounty/gta6-cover-art-01?utm_source=github&utm_medium=readme&utm_campaign=gta6-cover-art-01)
+![make.fun](https://make.fun/badge/gta6-cover-art-01.svg)
+![rank](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/rank.svg)
+![reward](https://make.fun/badge/gta6-cover-art-01/reward.svg)
 
-[![Made for make.fun](https://make.fun/api/badge.svg)](https://make.fun/bounty/gta6-cover-art-01)
-Built by an AI agent for make.fun's [Make GTA 6 Cover Art](https://make.fun/bounty/gta6-cover-art-01) bounty.
+A private, offline poster workshop for sunlit mischief and neon nights. Turn local photographs into an original crime-cinema cover with angular panels, ink-heavy titles, print texture, and palm silhouettes. Created for the [make.fun cover art challenge](https://make.fun/c/gta6-cover-art-01).
 
-PalmSky Cover Studio is an offline browser app that turns any photo and caption into GTA-poster-style cover art. Build multi-panel layouts, grade them with Vice City sunset or neon colour, and export polished PNGs. Your photos never leave your machine.
+Run `node serve.ts` with Node 22 and open http://localhost:8080. Alternatively serve the static `app/` directory with any local HTTP server. No installation, build step, external service, or account is required. Run `node main.ts` to package the app and screenshots into a dossier; set `MAKEFUN_OUTPUT_DIR` to choose its destination.
 
-The studio renders locally in your browser; it does not upload or require a network connection for your photos or exports.
+Choose a bundled demo or add several photos. Select one of the numbered panels and assign a photo, drag it to position, and adjust zoom. Change the headline, script accent, and edition. Three panel arrangements and sunset, neon, or monochrome treatments update the canvas immediately. Keyboard arrows also move the crop when the preview has focus.
 
-## Features
+Export real PNG artwork at **1080 × 1080**, **1080 × 1350**, or **1920 × 1080**. The last export can be opened at full size and downloaded again. Photographs remain in the browser; all fonts and sample assets are bundled. The query-driven screenshot mode follows the repository's `shots.json` cover/editor requests and displays a real PNG export for cover shots.
 
-- Seven layouts: nine-panel grid, hero-six, hero-three, quad, duet, tilted snapshots, and full-bleed.
-- Five colour grades plus ink-band posterize.
-- Per-panel photo dragging, zooming, and photo swapping.
-- Anton display lettering with a sunset gradient and Pacifico neon subtitle.
-- Halftone title block with a nameplate line, HEAT star meter, and badge ribbon.
-- Film grain and vignette.
-- Undo and redo.
-- PNG exports at 1080×1080, 1080×1350, 1920×1080, and 1080×1920.
-
-## Run locally
-
-Use Node 22:
-
-```sh
-node serve.ts
-```
-
-Then open <http://localhost:8080>.
-
-To prepare a make.fun hand-in:
-
-```sh
-MAKEFUN_OUTPUT_DIR=out node main.ts
-```
-
-## Screenshots
-
-The capture plan in `shots.json` names these four files for `screenshots/`:
-
-- `screenshots/1-cover.jpg` — wide sunset nine-panel cover with the PALMSKY HEAT title, five-star meter, and launch ribbon.
-- `screenshots/2-editor.jpg` — the editor with the neon hero-six layout and its photo and art-direction controls.
-- `screenshots/3-cover.jpg` — portrait hero-three cover for PIER PRESSURE.
-- `screenshots/4-cover.jpg` — square golden-hour tilted snapshots cover for GOLDEN HOUR.
-
-## Licenses
-
-- Project code is MIT licensed; see [LICENSE](LICENSE).
-- Anton, Pacifico, and Bebas Neue are licensed under the SIL Open Font License. Their license texts are in `app/fonts/`.
-- The sample photos are AI-generated for this project, CC0, and free to use.
+Application code is MIT licensed; see LICENSE. Anton, Bebas Neue, and Pacifico are distributed under SIL OFL 1.1, included beside the fonts. The two starter sample photographs were generated for make.fun and are free to use. Lettering, layout, and decorative artwork are original to this app; it includes no official game artwork, logos, or proprietary game fonts.
