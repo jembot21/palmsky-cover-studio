@@ -1,12 +1,10 @@
-export async function configureShot(studio) {
+export async function prepareShots(studio){
   const query=new URLSearchParams(location.search);
   if(!query.has('shot'))return;
-  await studio.sample(query.get('photo')==='pier'?'pier':'boulevard');
-  const caption=query.get('caption');
-  if(caption){studio.design.title=caption.trim().toUpperCase().split(/\s+/).join('\n');document.querySelector('#title').value=studio.design.title;studio.setCaption(caption.toUpperCase()+' / PALMSKY ORIGINALS');}
-  studio.setSize('1080x1080');
-  if(query.get('shot')==='cover'){
-    const exported=await studio.makePng(false,false);
-    const image=new Image();image.id='shot-image';image.alt='A full-resolution cover exported by PalmSky';image.src=exported.url;await image.decode();document.body.append(image);document.body.classList.add('art-only');
-  }
+  const photo=query.get('photo')==='pier'?1:0;
+  studio.model.panels.forEach((panel,i)=>{panel.photo=i%2?1-photo:photo});
+  if(query.get('caption')){studio.model.title=query.get('caption');document.getElementById('title').value=studio.model.title}
+  if(photo===0){studio.model.grade='neon';studio.model.subtitle='Own the night';studio.model.caption='THE CITY IS YOURS. TAKE THE SCENIC ROUTE.'}
+  if(query.get('shot')==='cover'){studio.setSize('1080x1080');document.body.classList.add('shot-cover')}
+  await document.fonts.ready;studio.render();
 }

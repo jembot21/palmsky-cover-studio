@@ -1,48 +1,28 @@
-import { paintCover, dimensions, locatePanel } from './cover.js';
-import { configureShot } from './shots.js';
-
-const $=selector=>document.querySelector(selector);
-const canvas=$('#preview');
-const library=[];
-const design={title:'AFTER\nHOURS',caption:'NO RULES. JUST HORIZONS.',subtitle:'Paradise has a price',layout:'vice',grade:'sunset',size:'1080x1350',panels:[{photo:0,zoom:1,x:0,y:.6},{photo:0,zoom:2.5,x:.65,y:.65},{photo:0,zoom:2,x:.65,y:-.9},{photo:1,zoom:2.4,x:-.8,y:-.6}]};
-let selected=0,drag=null,latestUrl='',latestName='';
-// Keep a keyboard path to crop positioning alongside direct manipulation.
+import {renderCover,formats,panelGeometry} from './cover.js';
+import {prepareShots} from './shots.js';
+const $=id=>document.getElementById(id);
+const canvas=$('cover');
+const model={photos:[],panels:Array.from({length:4},(_,i)=>({photo:i%2,zoom:1,x:0,y:0})),layout:'coast',grade:'sunset',size:'1080x1350',title:'SUNSET HEIST',subtitle:'Wish you were here',edition:'VOL. 01',caption:'GOOD TIMES. BAD DECISIONS.'};
+let active=0,paintPending=false,lastURL='';
+function repaint(){if(paintPending)return;paintPending=true;requestAnimationFrame(()=>{const count=panelGeometry(model.layout,formats[model.size][0]>formats[model.size][1]).length;[...$('panel').options].forEach((option,index)=>option.disabled=index>=count);if(active>=count)choosePanel(0);renderCover(canvas,model);paintPending=false})}
+async function addPhoto(url,name){const image=new Image();image.src=url;await image.decode();model.photos.push({image,name,url});return model.photos.length-1}
+function refreshTray(){const tray=$('photo-tray');tray.replaceChildren();model.photos.forEach((photo,index)=>{const button=document.createElement('button');button.title=`Use ${photo.name} in panel ${active+1}`;button.classList.toggle('active',model.panels[active].photo===index);const img=document.createElement('img');img.src=photo.url;img.alt=photo.name;button.append(img);button.onclick=()=>{model.panels[active]={photo:index,zoom:1,x:0,y:0};$('zoom').value=1;refreshTray();repaint()};tray.append(button)});$('photo-count').textContent=`${model.photos.length} PHOTOS`}
+function choosePanel(index){active=index;$('panel').value=index;$('panel-number').textContent=String(index+1).padStart(2,'0');$('zoom').value=model.panels[index].zoom;refreshTray()}
+function setSize(value){model.size=value;$('size').value=value;$('dimensions').textContent=value.replace('x',' × ')+' PX';repaint()}
+async function exportPNG(show=true){await document.fonts.ready;renderCover(canvas,model);const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(lastURL)URL.revokeObjectURL(lastURL);lastURL=URL.createObjectURL(blob);const name=`palmsky-${model.title.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${model.size}.png`;const a=document.createElement('a');a.href=lastURL;a.download=name;a.click();$('export-image').src=lastURL;$('save-again').href=lastURL;$('save-again').download=name;$('export-info').textContent=`${model.size.replace('x',' × ')} · PNG · Rendered on your device`;$('notice').textContent='Export complete. Your cover is ready for its close-up.';if(show)$('download-dialog').showModal();return {url:lastURL,width:canvas.width,height:canvas.height}}
+await Promise.all([document.fonts.load('18px Anton'),document.fonts.load('18px Bebas'),document.fonts.load('18px Pacifico')]);
+await addPhoto('./samples/boulevard.jpg','Boulevard');await addPhoto('./samples/pier.jpg','The pier');refreshTray();repaint();
+$('upload').onchange=async e=>{try{for(const file of e.target.files){const index=await addPhoto(URL.createObjectURL(file),file.name);model.panels[active]={photo:index,zoom:1,x:0,y:0};active=(active+1)%panelGeometry(model.layout,canvas.width>canvas.height).length}choosePanel(0);repaint();$('notice').textContent='Photos added. Select a panel, then drag to find your frame.'}catch{$('notice').textContent='That image could not be opened. Try a JPEG, PNG or WebP.'}};
+document.querySelectorAll('[data-demo]').forEach(button=>button.onclick=()=>{model.panels[active]={photo:button.dataset.demo==='pier'?1:0,zoom:1,x:0,y:0};choosePanel(active);repaint()});
+document.querySelectorAll('[data-layout]').forEach(button=>button.onclick=()=>{model.layout=button.dataset.layout;document.querySelectorAll('[data-layout]').forEach(b=>b.classList.toggle('active',b===button));choosePanel(0);repaint()});
+document.querySelectorAll('[data-grade]').forEach(button=>button.onclick=()=>{model.grade=button.dataset.grade;document.querySelectorAll('[data-grade]').forEach(b=>b.classList.toggle('active',b===button));repaint()});
+for(const key of ['title','subtitle','caption','edition'])$(key).oninput=e=>{model[key]=e.target.value;repaint()};
+$('panel').onchange=e=>choosePanel(Number(e.target.value));$('zoom').oninput=e=>{model.panels[active].zoom=Number(e.target.value);repaint()};$('reset').onclick=()=>{Object.assign(model.panels[active],{zoom:1,x:0,y:0});$('zoom').value=1;repaint()};$('size').onchange=e=>setSize(e.target.value);$('export').onclick=()=>exportPNG();$('top-export').onclick=()=>exportPNG();$('close-dialog').onclick=()=>$('download-dialog').close();
+let dragging;
+canvas.onpointerdown=e=>{const rect=canvas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width,y=(e.clientY-rect.top)/rect.height;const cells=panelGeometry(model.layout,canvas.width>canvas.height);const hit=cells.findIndex(points=>{const context=canvas.getContext('2d');context.beginPath();points.forEach(([px,py],i)=>i?context.lineTo(px*canvas.width,py*canvas.height):context.moveTo(px*canvas.width,py*canvas.height));context.closePath();return context.isPointInPath(x*canvas.width,y*canvas.height)});if(hit>=0)choosePanel(hit);dragging={x:e.clientX,y:e.clientY,ox:model.panels[active].x,oy:model.panels[active].y};canvas.setPointerCapture(e.pointerId);canvas.style.cursor='grabbing'};
+canvas.onpointermove=e=>{if(!dragging)return;const rect=canvas.getBoundingClientRect();model.panels[active].x=Math.max(-2,Math.min(2,dragging.ox+(e.clientX-dragging.x)/rect.width));model.panels[active].y=Math.max(-2,Math.min(2,dragging.oy+(e.clientY-dragging.y)/rect.height));repaint()};canvas.onpointerup=canvas.onpointercancel=()=>{dragging=null;canvas.style.cursor='grab'};
+window.palmsky={model,canvas,render:()=>renderCover(canvas,model),exportPNG,setSize,choosePanel};
 canvas.tabIndex=0;
-canvas.addEventListener('keydown',event=>{
-  const direction={ArrowLeft:[-.035,0],ArrowRight:[.035,0],ArrowUp:[0,-.035],ArrowDown:[0,.035]}[event.key];
-  if(!direction)return;
-  event.preventDefault();const frame=design.panels[selected];frame.x+=direction[0];frame.y+=direction[1];repaint();
-  notice(`Panel ${selected+1} repositioned. Arrow keys move the crop.`);
-});
-function notice(message){$('#status').textContent=message;}
-function repaint(){const [w,h]=dimensions[design.size];if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}paintCover(canvas,design,library);$('#canvas-meta').textContent=`${w===h?'SQUARE':w>h?'WIDE':'PORTRAIT'} / ${w} × ${h}`;}
-function syncPanel(){ $('#panel-select').value=selected;$('#zoom').value=design.panels[selected].zoom;document.querySelectorAll('.photo-thumb').forEach((button,i)=>button.classList.toggle('active',i===design.panels[selected].photo)); }
-function redrawTray(){const tray=$('#photo-tray');tray.replaceChildren();library.forEach((entry,index)=>{const button=document.createElement('button');button.className='photo-thumb';button.title=`Use ${entry.name} in panel ${selected+1}`;button.setAttribute('aria-label',`Assign ${entry.name} to selected panel`);const picture=document.createElement('img');picture.src=entry.image.src;picture.alt=entry.name;const number=document.createElement('span');number.textContent=String(index+1).padStart(2,'0');button.append(picture,number);button.onclick=()=>{design.panels[selected]={photo:index,zoom:1,x:0,y:0};syncPanel();repaint();notice(`Photo assigned to panel ${selected+1}.`);};tray.append(button);});$('#photo-count').textContent=`${library.length} LOADED`;syncPanel();}
-async function loadPicture(source,name){const image=new Image();image.src=source;await image.decode();library.push({image,name});return library.length-1;}
-async function sample(name){
-  const index=name==='pier'?1:0;
-  const framing=index===0?[[1,0,.6],[2.5,.65,.65],[2,.65,-.9],[2.4,-.8,-.6]]:[[1,0,.6],[2.5,-.8,.65],[2,-.8,-.3],[2.4,.7,-.8]];
-  design.panels.forEach((p,i)=>Object.assign(p,{photo:i===3?1-index:index,zoom:framing[i][0],x:framing[i][1],y:framing[i][2]}));
-  design.title=index===1?'SUNSET\nHEIST':'AFTER\nHOURS';design.subtitle=index===1?'Catch of a lifetime':'Paradise has a price';$('#title').value=design.title;$('#subtitle').value=design.subtitle;syncPanel();repaint();notice(`${index===1?'Pier':'Boulevard'} demo loaded. Make it yours.`);
-}
-$('#photo-files').addEventListener('change',async event=>{const files=[...event.target.files];let count=0;for(const file of files){const url=URL.createObjectURL(file);try{const index=await loadPicture(url,file.name);design.panels[(selected+count)%4]={photo:index,zoom:1,x:0,y:0};count++;}catch{URL.revokeObjectURL(url);notice(`Could not open ${file.name}. Try a JPG, PNG or WebP.`);}}if(count){if(count===1)design.panels.forEach(p=>Object.assign(p,{photo:library.length-1,zoom:1,x:0,y:0}));redrawTray();repaint();notice(`${count} photo${count>1?'s':''} added. Drag to find your angle.`);}event.target.value='';});
-$('#demo-boulevard').onclick=()=>sample('boulevard');$('#demo-pier').onclick=()=>sample('pier');
-for(const key of ['title','caption','subtitle'])$('#'+key).addEventListener('input',event=>{design[key]=event.target.value;repaint();});
-$('#panel-select').onchange=event=>{selected=Number(event.target.value);syncPanel();notice(`Panel ${selected+1} selected. Choose a photo or drag to reframe.`);};
-$('#zoom').oninput=event=>{design.panels[selected].zoom=Number(event.target.value);repaint();};
-$('#reset-crop').onclick=()=>{Object.assign(design.panels[selected],{zoom:1,x:0,y:0});syncPanel();repaint();};
-for(const type of ['layout','grade'])document.querySelectorAll(`[data-${type}]`).forEach(button=>button.onclick=()=>{design[type]=button.dataset[type];document.querySelectorAll(`[data-${type}]`).forEach(item=>{item.classList.toggle('active',item===button);item.setAttribute('aria-pressed',item===button?'true':'false');});repaint();});
-$('#size').onchange=event=>{design.size=event.target.value;repaint();};
-canvas.addEventListener('pointerdown',event=>{const box=canvas.getBoundingClientRect(),x=(event.clientX-box.left)/box.width,y=(event.clientY-box.top)/box.height;const hit=locatePanel(design.layout,x,y);if(hit>=0){selected=hit;syncPanel();drag={x:event.clientX,y:event.clientY,px:design.panels[hit].x,py:design.panels[hit].y,width:box.width,height:box.height};canvas.setPointerCapture(event.pointerId);notice(`Reframing panel ${hit+1} · use Zoom for a closer crop.`);}});
-canvas.addEventListener('pointermove',event=>{if(!drag)return;const p=design.panels[selected];p.x=drag.px+(event.clientX-drag.x)/drag.width*1.8;p.y=drag.py+(event.clientY-drag.y)/drag.height*1.8;repaint();});
-for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,()=>drag=null);
-function saveLatest(){const link=document.createElement('a');link.href=latestUrl;link.download=latestName;link.click();}
-async function makePng(download=true,show=true){await document.fonts.ready;const output=document.createElement('canvas');[output.width,output.height]=dimensions[design.size];paintCover(output,design,library);const blob=await new Promise(resolve=>output.toBlob(resolve,'image/png'));if(!blob)throw new Error('The browser could not encode this cover.');if(latestUrl)URL.revokeObjectURL(latestUrl);latestUrl=URL.createObjectURL(blob);latestName=`palmsky-${design.title.toLowerCase().replace(/[^a-z0-9]+/g,'-')}-${design.size}.png`;$('#finished-cover').src=latestUrl;$('#export-description').textContent=`${output.width} × ${output.height} PNG · Full resolution · Made with PalmSky`;if(download)saveLatest();if(show&&!$('#artwork-dialog').open)$('#artwork-dialog').showModal();notice(`Exported ${output.width} × ${output.height}. Your city, ready to share.`);return {blob,url:latestUrl,width:output.width,height:output.height};}
-$('#export').onclick=async()=>{const button=$('#export');button.disabled=true;try{await makePng();}catch(error){notice(error.message);}finally{button.disabled=false;}};
-$('#inspect').onclick=()=>makePng(false,true);$('#close-artwork').onclick=()=>$('#artwork-dialog').close();$('#save-again').onclick=saveLatest;
-await Promise.all([document.fonts.load('20px Anton'),document.fonts.load('20px Bebas'),document.fonts.load('20px Pacifico')]);
-await loadPicture('./samples/boulevard.jpg','Boulevard');await loadPicture('./samples/pier.jpg','Pier');redrawTray();repaint();
-const studio={design,library,repaint,sample,makePng,setSize(value){if(!dimensions[value])return;design.size=value;$('#size').value=value;repaint();},setCaption(value){design.caption=value;$('#caption').value=value;repaint();}};
-window.palmSky=studio;
-await configureShot(studio);
-document.documentElement.dataset.ready='true';
+canvas.setAttribute('aria-description','Click a panel to select it. Drag to crop, or use arrow keys to move its photo. Plus and minus change zoom.');
+canvas.addEventListener('keydown',event=>{const crop=model.panels[active];const movements={ArrowLeft:[-.025,0],ArrowRight:[.025,0],ArrowUp:[0,-.025],ArrowDown:[0,.025]};if(movements[event.key]){event.preventDefault();crop.x+=movements[event.key][0];crop.y+=movements[event.key][1];repaint()}else if(event.key==='+'||event.key==='-'){event.preventDefault();crop.zoom=Math.max(1,Math.min(3,crop.zoom+(event.key==='+'?.05:-.05)));$('zoom').value=crop.zoom;repaint()}});
+await prepareShots(window.palmsky);window.palmskyReady=true;

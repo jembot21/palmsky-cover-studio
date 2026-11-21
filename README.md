@@ -4,62 +4,29 @@
 ![rank](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/rank.svg)
 ![reward](https://make.fun/badge/gta6-cover-art-01/jembot21/palmsky-cover-studio/reward.svg)
 
-A little sunset, a little trouble. PalmSky turns ordinary photographs into
-original crime-poster covers: sliced photo panels, oversized inked lettering,
-sunburst printwork and a skyline of silhouetted palms. Start with a bundled
-portrait or bring your own camera roll, then take home an actual PNG.
+Your camera roll, recast as a sunburned crime-film cover. PalmSky layers asymmetric photo panels, punchy inked titles, little gold edition seals and palm silhouettes into an original poster you can save immediately. It runs entirely on your device without accounts, analytics, uploads or external dependencies.
 
-Built for the [make.fun cover-art challenge](https://make.fun/c/gta6-cover-art-01)
-and its [cover studio bounty](https://make.fun/bounty/gta6-cover-art-01).
+Created for [make.fun gta6-cover-art-01](https://make.fun/c/gta6-cover-art-01); see the [cover-art bounty](https://make.fun/bounty/gta6-cover-art-01).
 
-## Open the studio
+## Run the studio
 
-Use Node 22 or newer. There is no installation, dependency download or bundler.
+Use a modern desktop browser and Node 22 or newer. Run `node serve.ts` and visit `http://localhost:8080`. A different port works with `node serve.ts --port 8765`. The `app/` directory is a portable static website; it needs no package install or build. Once served locally, all assets and processing stay local. Opening the HTML directly through file:// is not supported because it uses browser modules.
 
-```sh
-node serve.ts --port 8765
-```
+## Make your cover
 
-Open http://localhost:8765 in a modern browser. The default server port is 8080
-if you omit the argument. All runtime assets live in `app/`; once served locally,
-the studio needs no internet connection. User photographs stay inside the browser.
+1. Try Boulevard or The pier, or add one or several personal images.
+2. Click a panel in the preview, then click a photo thumbnail to assign it. Reuse one image across all panels or mix several. Drag inside the preview to position the crop and adjust Crop / Zoom for a closer view.
+3. Choose Coastline, Afterhours or Crossroads. Edit the cover title, script accent, edition and bottom caption. Pick Sunset, Neon or Mono.
+4. Choose a format and press Download PNG. A finished-cover proof appears with another save link.
 
-## From photo to poster
+Exports are actual PNG images: square **1080 × 1080**, portrait **1080 × 1350**, and landscape **1920 × 1080**. Canvas rendering uses the full export resolution rather than resizing a browser screenshot. The landscape composition adapts to three panels; portrait and square layouts use three or four panels.
 
-1. Choose Boulevard or Pier, or use **Add your photos** to pick several images.
-2. Select one of four panels and click a library thumbnail to assign its photo.
-   A single imported photo fills every panel; multiple photos fill consecutive panels.
-3. Drag a panel in the live canvas to reframe. Zoom exposes tighter crops; reset
-   returns that panel to its centered framing. The focused canvas also accepts
-   arrow keys, and the panel selector provides a keyboard route to every panel.
-4. Write a two-line title, top caption and small script accent. Try Vice split,
-   Triptych or Crossfire, with Sunset, Neon or Mono print treatments.
-5. Pick a format and press **Export PNG**. The export downloads immediately and
-   opens an artwork proof with a second Save button.
+## Inside the package
 
-Every format is rendered anew at its native size: **1080 × 1080** square,
-**1080 × 1350** portrait, and **1920 × 1080** landscape. Exported artwork has
-no editor controls, panel selection marks or watermark. The print treatment
-combines tonal quantization, color mapping, fine halftone, seeded grain and vignette.
+`src/cover.js` holds deterministic canvas composition and effects. `src/main.js` manages the photo library, crop gestures, editing and downloads. `src/shots.js` implements the query modes in the starter `shots.json`: `?shot=cover` isolates the finished cover, while `?shot=editor` keeps the studio visible. Both accept `photo=pier` or `photo=boulevard` and a `caption` cover title. `window.palmskyReady` signals that fonts and photos are ready; `window.palmsky` exposes rendering and export controls for browser verification.
 
-## Package and check
+Run `MAKEFUN_OUTPUT_DIR=/tmp/out-r5 node main.ts` to package `app/`, `screenshots/` and the canonical `dossier.json`. Without that environment variable the destination is `/output`. The build prints a source inventory but adds no inventory file to the dossier output. The three screenshot proofs show two exported covers and the working editor.
 
-```sh
-MAKEFUN_OUTPUT_DIR=/tmp/out-r5 node main.ts
-```
+## Rights
 
-The entry point copies the app and three screenshots, then uses the unchanged
-kit dossier builder to produce `dossier.json`. A console inventory reports the
-packaged filenames and byte total without adding anything to the output folder.
-The screenshot routes in `shots.json` are handled by `src/shots.js`: `?shot=cover`
-displays a real app-generated PNG; `?shot=editor` keeps the working editor visible.
-Both routes accept the supplied `photo` and `caption` parameters.
-
-## Credits and licenses
-
-The application is MIT licensed; see `LICENSE`. The bundled Anton, Bebas Neue
-and Pacifico typefaces are under the SIL Open Font License 1.1, reproduced in
-`app/fonts/OFL-Anton.txt`, `OFL-BebasNeue.txt` and `OFL-Pacifico.txt`.
-The two starter photographs were generated for make.fun and supplied for free use.
-PalmSky's composition, lettering treatment and drawn ornaments are original.
-This project contains no Rockstar mark, official GTA illustration or official GTA font.
+Application code is MIT licensed; see LICENSE. Anton, Bebas Neue and Pacifico are bundled under SIL OFL 1.1 with full license notices in `app/fonts/`. The two sample photographs were supplied by the challenge starter as free-to-use AI images. The design, lettering treatments, canvas ornament and code are original. No Rockstar logos, official GTA artwork or proprietary GTA fonts are included. Your own photos remain yours; use photos you have permission to reproduce.
